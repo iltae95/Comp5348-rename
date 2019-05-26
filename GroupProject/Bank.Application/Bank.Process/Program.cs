@@ -11,17 +11,46 @@ using Microsoft.Practices.Unity.Configuration;
 using Microsoft.Practices.Unity.ServiceLocatorAdapter;
 using Microsoft.Practices.ServiceLocation;
 using System.Configuration;
+using Common;
+using Bank.Process.SubscriptionService;
+using System.Messaging;
 
 namespace Bank.Process
 {
     class Program
     {
+        private static readonly String sPublishQueuePath = ".\\private$\\TransferService";
+
+        private static SubscriberServiceHost mHost;
+        private const String cAddress = "net.msmq://localhost/private/BankQueueTransacted";
+        private const String cMexAddress = "net.tcp://localhost:9022/BankQueueTransacted/mex";
+
         static void Main(string[] args)
         {
             ResolveDependencies();
             CreateDummyEntities();
             HostServices();
+            HostSubscriberService();
+            SubscribeForEvents();
+            HostServices();
+        }
 
+        private static void HostSubscriberService()
+        {
+            mHost = new SubscriberServiceHost(typeof(SubscriberService), cAddress, cMexAddress, true, ".\\private$\\BankQueueTransacted");
+        }
+
+        private static void SubscribeForEvents()
+        {
+            SubscriptionServiceClient lClient = new SubscriptionServiceClient();
+            lClient.Subscribe("TransferRequest", cAddress);
+        }
+
+        private static void EnsureQueueExists()
+        {
+            // Create the transacted MSMQ queue if necessary.
+            if (!MessageQueue.Exists(sPublishQueuePath))
+                MessageQueue.Create(sPublishQueuePath, true);
         }
 
         private static void HostServices()

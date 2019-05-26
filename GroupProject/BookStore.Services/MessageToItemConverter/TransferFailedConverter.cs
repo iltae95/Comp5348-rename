@@ -20,7 +20,7 @@ namespace BookStore.Services.MessageToItemConverter
                 Result = new TransferFailed
                 {
                     Error = message.Error,
-                    OrderGuid = message.OrderGuid
+                    OrderId = message.OrderId
                 };
             }
         }

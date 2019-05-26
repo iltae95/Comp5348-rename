@@ -5,15 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bank.MessageTypes
+namespace Bank.Business.Components.Model
 {
-    public class TransferRequest : IVisitable
+    class TransferFailed : IVisitable
     {
-        public double Amount { get; set; }
-        public int FromAcctNumber { get; set; }
-        public int ToAcctNumber { get; set; }
+        public String Topic => "TransferFailed";
+        public Exception Error { get; set; }
         public int OrderId { get; set; }
-        public int CustomerId { get; set; }
 
         public void Accept(IVisitor pVisitor)
         {

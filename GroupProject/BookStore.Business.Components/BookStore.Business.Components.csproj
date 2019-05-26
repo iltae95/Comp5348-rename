@@ -62,6 +62,7 @@
     <Compile Include="DeliveryNotificationProvider.cs" />
     <Compile Include="EmailProvider.cs" />
     <Compile Include="ExternalServiceFactory.cs" />
+    <Compile Include="RequestToMessageConverter\TransferConverter.cs" />
     <Compile Include="RoleProvider.cs" />
     <Compile Include="Service References\PublisherService\Reference.cs">
       <AutoGen>True</AutoGen>

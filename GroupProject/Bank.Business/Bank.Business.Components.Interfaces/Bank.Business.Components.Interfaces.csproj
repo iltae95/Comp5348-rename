@@ -46,6 +46,16 @@
     <Compile Include="ITransferProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Bank.Message.MessageTypes\Bank.MessageTypes.csproj">
+      <Project>{1A5B945E-2277-47F6-B8DF-E12BAF63E5E7}</Project>
+      <Name>Bank.MessageTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Common.csproj">
+      <Project>{C2D987A4-AD05-4C0B-B285-5B64B0132DF9}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

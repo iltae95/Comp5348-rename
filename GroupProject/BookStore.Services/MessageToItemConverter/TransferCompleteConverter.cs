@@ -14,12 +14,12 @@ namespace BookStore.Services.MessageToItemConverter
         public TransferComplete Result { get; set; }
         public void Visit(IVisitable pVisitable)
         {
-            if (pVisitable is TransferCompleteConverter)
+            if (pVisitable is TransferCompleteMessage)
             {
                 var message = pVisitable as TransferCompleteMessage;
                 Result = new TransferComplete
                 {
-                    OrderGuid = message.OrderGuid
+                    OrderId = message.OrderId
                 };
             }
         }

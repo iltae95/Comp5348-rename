@@ -5,13 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bank.MessageTypes
+namespace BookStore.Business.Entities.Model
 {
     public class TransferRequest : IVisitable
     {
+        public String Topic => "TransferRequest";
         public double Amount { get; set; }
-        public int FromAcctNumber { get; set; }
-        public int ToAcctNumber { get; set; }
+        public int FromAccountNumber { get; set; }
+        public int ToAccountNumber { get; set; }
         public int OrderId { get; set; }
         public int CustomerId { get; set; }
 

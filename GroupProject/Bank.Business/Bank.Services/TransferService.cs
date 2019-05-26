@@ -20,7 +20,14 @@ namespace Bank.Services
         [OperationBehavior(TransactionScopeRequired = true)]
         public void Transfer(TransferRequest pTransferRequest)
         {
-            TransferProvider.Transfer(pTransferRequest.Amount, pTransferRequest.FromAcctNumber, pTransferRequest.ToAcctNumber);
+            TransferProvider.Transfer(new TransferRequest
+            {
+                    Amount = pTransferRequest.Amount,
+                    FromAcctNumber = pTransferRequest.FromAcctNumber,
+                    ToAcctNumber = pTransferRequest.ToAcctNumber,
+                    OrderId = pTransferRequest.OrderId,
+                    CustomerId = pTransferRequest.CustomerId
+            });
         }
 
         //[OperationBehavior(TransactionScopeRequired=true)]

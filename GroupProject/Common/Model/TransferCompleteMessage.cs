@@ -11,7 +11,7 @@ namespace Common.Model
     public class TransferCompleteMessage : Message
     {
         [DataMember]
-        public Guid OrderGuid { get; set; }
+        public int OrderId { get; set; }
 
         [DataMember]
         public int CustomerId { get; set; }

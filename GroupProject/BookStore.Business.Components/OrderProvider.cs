@@ -7,7 +7,9 @@ using BookStore.Business.Entities;
 using System.Transactions;
 using Microsoft.Practices.ServiceLocation;
 using DeliveryCo.MessageTypes;
-using Bank.MessageTypes;
+using BookStore.Business.Components.RequestToMessageConverter;
+using BookStore.Business.Components.PublisherService;
+using BookStore.Business.Entities.Model;
 
 namespace BookStore.Business.Components
 {
@@ -132,15 +134,18 @@ namespace BookStore.Business.Components
         {
             try
             {
-                ExternalServiceFactory.Instance.TransferService.Transfer(
-                    new TransferRequest
-                    {
-                        Amount = pTotal,
-                        FromAcctNumber = pCustomerAccountNumber,
-                        ToAcctNumber = RetrieveBookStoreAccountNumber(),
-                        OrderGuid = pOrderId,
-                        CustomerId = pCustomerId
-                    });
+                TransferRequest lItem = new TransferRequest
+                {
+                    Amount = pTotal,
+                    FromAccountNumber = pCustomerAccountNumber,
+                    ToAccountNumber = RetrieveBookStoreAccountNumber(),
+                    OrderId = pOrderId,
+                    CustomerId = pCustomerId
+                };
+                TransferRequestConverter lVisitor = new TransferRequestConverter();
+                lVisitor.Visit(lItem);
+                PublisherServiceClient lClient = new PublisherServiceClient();
+                lClient.Publish(lVisitor.Result);
                 //ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
             }
             catch
@@ -149,7 +154,7 @@ namespace BookStore.Business.Components
             }
         }
 
-        public void TransferFundsComplete(Guid pOrderGuid)
+        public void TransferFundsComplete(int pOrderId)
         {
             using (TransactionScope lScope = new TransactionScope())
             {
@@ -158,7 +163,7 @@ namespace BookStore.Business.Components
                     try
                     {
                         Console.WriteLine("Funds Transfer Complete");
-                        var pOrder = lContainer.Orders.Include("Customer").First(x => x.OrderNumber == pOrderGuid);
+                        var pOrder = lContainer.Orders.Include("Customer").First(x => x.Id == pOrderId);
 
                         PlaceDeliveryForOrder(pOrder);
 
@@ -175,7 +180,7 @@ namespace BookStore.Business.Components
 
         }
 
-        public void TransferFundsFailed(Guid pOrderGuid)
+        public void TransferFundsFailed(int pOrderId)
         {
             using (TransactionScope lScope = new TransactionScope())
             {
@@ -185,7 +190,7 @@ namespace BookStore.Business.Components
                     {
                         Console.WriteLine("Funds Transfer Error");
                         var pOrder = lContainer.Orders
-                            .Include("Customer").FirstOrDefault(x => x.OrderNumber == pOrderGuid);
+                            .Include("Customer").FirstOrDefault(x => x.Id == pOrderId);
 
                         EmailProvider.SendMessage(new EmailMessage()
                         {
