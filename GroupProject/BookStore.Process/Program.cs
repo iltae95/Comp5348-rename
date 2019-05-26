@@ -38,6 +38,8 @@ namespace BookStore.Process
             ResolveDependencies();
             CreateMessageQueue();
             InsertDummyEntities();
+            HostSubscriberService();
+            SubscribeForEvents();
             HostServices();
         }
 
@@ -50,7 +52,7 @@ namespace BookStore.Process
         {
             SubscriptionServiceClient lClient = new SubscriptionServiceClient();
             lClient.Subscribe("TransferComplete", cAddress);
-            lClient.Subscribe("TransferFailed", cAddress);
+            lClient.Subscribe("TransferFailed", cAddress); 
         }
 
         private static void InsertDummyEntities()

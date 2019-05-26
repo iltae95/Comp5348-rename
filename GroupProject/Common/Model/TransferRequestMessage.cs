@@ -14,15 +14,16 @@ namespace Common.Model
         public double Amount { get; set; }
 
         [DataMember]
+        public Guid OrderId { get; set; }
+
+        [DataMember]
+        public int CustomerId { get; set; }
+
+        [DataMember]
         public int FromAccountNumber { get; set; }
 
         [DataMember]
         public int ToAccountNumber { get; set; }
 
-        [DataMember]
-        public int OrderId { get; set; }
-
-        [DataMember]
-        public int CustomerId { get; set; }
     }
 }

@@ -29,7 +29,6 @@ namespace Common
 
         private void CreateQueueIfNotExist(String pQueueAddress)
         {
-            // Create the transacted MSMQ queue if necessary.
             if (!MessageQueue.Exists(pQueueAddress))
                 MessageQueue.Create(pQueueAddress, true);
         }
