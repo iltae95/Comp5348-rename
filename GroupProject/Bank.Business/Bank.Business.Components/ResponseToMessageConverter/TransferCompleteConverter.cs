@@ -1,11 +1,6 @@
 ﻿using Bank.Business.Components.Model;
 using Common;
 using Common.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Bank.Business.Components.ResponseToMessageConverter
 {
@@ -16,12 +11,12 @@ namespace Bank.Business.Components.ResponseToMessageConverter
         {
             if (pVisitable is TransferComplete)
             {
-                var lItem = pVisitable as TransferComplete;
+                var res = pVisitable as TransferComplete;
                 Result = new TransferCompleteMessage
                 {
-                    CustomerId = lItem.CustomerId,
-                    OrderId = lItem.OrderId,
-                    Topic = lItem.Topic
+                    CustomerId = res.CustomerId,
+                    OrderId = res.OrderId,
+                    Topic = res.Topic
                 };
             }
         }

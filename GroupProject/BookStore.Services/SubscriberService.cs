@@ -33,20 +33,6 @@ namespace BookStore.Services
                 lMessage.Accept(lVisitor);
                 oService.TransferFundsFailed(lVisitor.Result);
             }
-            /*else if (pMessage.GetType() == typeof(DeliverySubmittedMessage))
-            {
-                DeliverySubmittedMessage lMessage = pMessage as DeliverySubmittedMessage;
-                var lVisitor = new DeliverySubmittedMessageToDeliverySubmittedItem();
-                lMessage.Accept(lVisitor);
-                oService.DeliverySubmitted(lVisitor.Result);
-            }
-            else if (pMessage.GetType() == typeof(DeliveryCompletedMessage))
-            {
-                DeliveryCompletedMessage lMessage = pMessage as DeliveryCompletedMessage;
-                var lVisitor = new DeliveryCompletedMessageToDeliveryCompletedItem();
-                lMessage.Accept(lVisitor);
-                dnService.NotifyDeliveryCompletion(lVisitor.Result.DeliveryIdentifier, (DeliveryInfoStatus)lVisitor.Result.Status);
-            }*/
         }
     }
 }

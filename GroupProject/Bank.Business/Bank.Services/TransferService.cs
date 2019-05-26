@@ -29,11 +29,5 @@ namespace Bank.Services
                     CustomerId = pTransferRequest.CustomerId
             });
         }
-
-        //[OperationBehavior(TransactionScopeRequired=true)]
-        //public void Transfer(double pAmount, int pFromAcctNumber, int pToAcctNumber)
-        //{
-        //    TransferProvider.Transfer(pAmount, pFromAcctNumber, pToAcctNumber);
-        //}
     }
 }

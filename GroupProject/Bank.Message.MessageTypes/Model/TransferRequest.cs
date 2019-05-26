@@ -10,10 +10,10 @@ namespace Bank.MessageTypes
     public class TransferRequest : IVisitable
     {
         public double Amount { get; set; }
+        public Guid OrderId { get; set; }
+        public int CustomerId { get; set; }
         public int FromAcctNumber { get; set; }
         public int ToAcctNumber { get; set; }
-        public int OrderId { get; set; }
-        public int CustomerId { get; set; }
 
         public void Accept(IVisitor pVisitor)
         {

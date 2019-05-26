@@ -32,6 +32,8 @@ namespace BookStore.Process
         {
             ResolveDependencies();
             InsertDummyEntities();
+            HostSubscriberService();
+            SubscribeForEvents();
             HostServices();
         }
 

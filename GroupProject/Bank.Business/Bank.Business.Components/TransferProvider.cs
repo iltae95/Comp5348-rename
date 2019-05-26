@@ -26,51 +26,34 @@ namespace Bank.Business.Components
             {
                 try
                 {
-                    // find the two account entities and add them to the Container
-                    Account lFromAcct = lContainer.Accounts.Where(account => pTransferRequest.FromAcctNumber == account.AccountNumber).First(); 
-                    Account lToAcct = lContainer.Accounts.Where(account => pTransferRequest.ToAcctNumber == account.AccountNumber).First();
+                    Account fromAcct = lContainer.Accounts.Where(account => pTransferRequest.FromAcctNumber == account.AccountNumber).First(); 
+                    Account toAcct = lContainer.Accounts.Where(account => pTransferRequest.ToAcctNumber == account.AccountNumber).First();
 
-                    // update the two accounts
-                    lFromAcct.Withdraw(pTransferRequest.Amount);
-                    lToAcct.Deposit(pTransferRequest.Amount);
+                    fromAcct.Withdraw(pTransferRequest.Amount);
+                    toAcct.Deposit(pTransferRequest.Amount);
 
-                    var lItem = new TransferComplete
-                    {
-                        OrderId = pTransferRequest.OrderId,
-                        CustomerId = pTransferRequest.CustomerId
-                    };
-                    var lVisitor = new TransferCompleteConverter();
-                    lItem.Accept(lVisitor);
-                    PublisherServiceClient lClient = new PublisherServiceClient();
-                    lClient.Publish(lVisitor.Result);
-
-                    // save changed entities and finish the transaction
                     lContainer.SaveChanges();
                     lScope.Complete();
+
+
                 }
                 catch (Exception lException)
                 {
-                    Console.WriteLine("Error occured while transferring money:  " + lException.Message);
+                    Console.WriteLine("There was an error while transferring funds: " + lException.Message);
 
-                    var lItem = new TransferFailed
+                    var item = new TransferFailed
                     {
-                        OrderId = pTransferRequest.OrderId
+                        OrderId = pTransferRequest.OrderId,
+                        Error = new Exception()
                     };
                     var lVisitor = new TransferFailedConverter();
-                    lItem.Accept(lVisitor);
+                    item.Accept(lVisitor);
                     PublisherServiceClient lClient = new PublisherServiceClient();
                     lClient.Publish(lVisitor.Result);
 
-                    throw;
+                    lContainer.SaveChanges();
+                    lScope.Complete();
                 }
-            }
-        }
-
-        private Account GetAccountFromNumber(int pToAcctNumber)
-        {
-            using (BankEntityModelContainer lContainer = new BankEntityModelContainer())
-            {
-                return lContainer.Accounts.Where((pAcct) => (pAcct.AccountNumber == pToAcctNumber)).FirstOrDefault();
             }
         }
     }
