@@ -16,6 +16,10 @@ namespace BookStore.Services
         {
             get { return ServiceLocator.Current.GetInstance<IDeliveryNotificationProvider>(); }
         }
+        public void NotifyDeliverySubmitted(string orderNnmber, Guid pDeliveryId, DeliveryInfoStatus status)
+        {
+            Provider.NotifyDeliverySubmitted(orderNnmber, pDeliveryId, GetDeliveryStatusFromDeliveryInfoStatus(status));
+        }
 
         public void NotifyDeliveryCompletion(Guid pDeliveryId, DeliveryInfoStatus status)
         {
