@@ -69,7 +69,7 @@ namespace BookStore.Business.Components
                     }
                 }
             }
-            SendOrderPlacedConfirmation(pOrder);
+            //SendOrderPlacedConfirmation(pOrder);
         }
 
         //private void MarkAppropriateUnchangedAssociations(Order pOrder)
@@ -126,7 +126,7 @@ namespace BookStore.Business.Components
                 OrderNumber = lDelivery.Order.OrderNumber.ToString(),  
                 SourceAddress = lDelivery.SourceAddress,
                 DestinationAddress = lDelivery.DestinationAddress,
-                DeliveryNotificationAddress = "net.tcp://localhost:9010/DeliveryNotificationService"
+                DeliveryNotificationAddress = "net.msmq://localhost/private/EmailNotifyQueue"
             });
 
             //lDelivery.ExternalDeliveryIdentifier = lDeliveryIdentifier;

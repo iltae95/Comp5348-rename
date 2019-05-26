@@ -15,17 +15,25 @@ namespace DeliveryCo.Business.Components
     {
         public Guid SubmitDelivery(DeliveryCo.Business.Entities.DeliveryInfo pDeliveryInfo)
         {
-            using(TransactionScope lScope = new TransactionScope())
-            using(DeliveryCoEntityModelContainer lContainer = new DeliveryCoEntityModelContainer())
-            {
-                pDeliveryInfo.DeliveryIdentifier = Guid.NewGuid();
-                pDeliveryInfo.Status = 0;
-                lContainer.DeliveryInfo.Add(pDeliveryInfo);
-                lContainer.SaveChanges();
-                ThreadPool.QueueUserWorkItem(new WaitCallback((pObj) => ScheduleDelivery(pDeliveryInfo)));
-                lScope.Complete();
-            }
-            return pDeliveryInfo.DeliveryIdentifier;
+            
+            
+                using (TransactionScope lScope = new TransactionScope())
+                using (DeliveryCoEntityModelContainer lContainer = new DeliveryCoEntityModelContainer())
+                {
+                    pDeliveryInfo.DeliveryIdentifier = Guid.NewGuid();
+                    pDeliveryInfo.Status = 0;
+                    lContainer.DeliveryInfo.Add(pDeliveryInfo);
+                    lContainer.SaveChanges();
+                    ThreadPool.QueueUserWorkItem(new WaitCallback((pObj) => ScheduleDelivery(pDeliveryInfo)));
+                
+                   // IDeliveryNotificationService lService = DeliveryNotificationServiceFactory.GetDeliveryNotificationService(pDeliveryInfo.DeliveryNotificationAddress);
+                    //lService.NotifyDeliverySubmitted(pDeliveryInfo.OrderNumber, pDeliveryInfo.DeliveryIdentifier, DeliveryInfoStatus.Submitted);
+
+                    lScope.Complete();
+                }
+               return pDeliveryInfo.DeliveryIdentifier;
+            
+            //return pDeliveryInfo.DeliveryIdentifier;
         }
 
         private void ScheduleDelivery(DeliveryInfo pDeliveryInfo)
@@ -39,6 +47,7 @@ namespace DeliveryCo.Business.Components
                 pDeliveryInfo.Status = 1;
                 IDeliveryNotificationService lService = DeliveryNotificationServiceFactory.GetDeliveryNotificationService(pDeliveryInfo.DeliveryNotificationAddress);
                 lService.NotifyDeliveryCompletion(pDeliveryInfo.DeliveryIdentifier, DeliveryInfoStatus.Delivered);
+                lScope.Complete();
             }
 
         }
