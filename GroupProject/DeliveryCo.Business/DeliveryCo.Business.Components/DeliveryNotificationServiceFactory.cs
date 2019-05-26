@@ -13,7 +13,6 @@ namespace DeliveryCo.Business.Components
         {
             NetMsmqBinding msmqCallbackBinding = new NetMsmqBinding();
             msmqCallbackBinding.Security.Mode = NetMsmqSecurityMode.None;
-
             ChannelFactory<IDeliveryNotificationService> lChannelFactory = new ChannelFactory<IDeliveryNotificationService>(msmqCallbackBinding, new EndpointAddress(pAddress));
             return lChannelFactory.CreateChannel();
         }
