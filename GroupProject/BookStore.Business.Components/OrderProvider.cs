@@ -114,10 +114,11 @@ namespace BookStore.Business.Components
 
         private void PlaceDeliveryForOrder(Order pOrder)
         {
+            DeliveryServiceRef.DeliveryServiceClient deliveryServiceClient = new DeliveryServiceRef.DeliveryServiceClient();
             Delivery lDelivery = new Delivery() { DeliveryStatus = DeliveryStatus.Submitted, SourceAddress = "Book Store Address", DestinationAddress = pOrder.Customer.Address, Order = pOrder };
 
             //Guid lDeliveryIdentifier = 
-            ExternalServiceFactory.Instance.DeliveryService.SubmitDelivery(new DeliveryInfo()
+            deliveryServiceClient.SubmitDelivery(new DeliveryInfo()
             { 
                 OrderNumber = lDelivery.Order.OrderNumber.ToString(),  
                 SourceAddress = lDelivery.SourceAddress,
