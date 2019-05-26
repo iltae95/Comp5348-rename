@@ -17,12 +17,21 @@ using System.Transactions;
 using System.ServiceModel.Description;
 using BookStore.Business.Components.Interfaces;
 using BookStore.WebClient.CustomAuth;
+
+using Common;
+using BookStore.Process.SubscriptionService;
+
 using System.Messaging;
+
 
 namespace BookStore.Process
 {
     public class Program
     {
+        private static SubscriberServiceHost mHost;
+        private const String cAddress = "net.msmq://localhost/private/BookStoreQueueTransacted";
+        private const String cMexAddress = "net.tcp://localhost:9021/BookStoreQueueTransacted/mex";
+
         static void Main(string[] args)
         {
             
@@ -30,6 +39,18 @@ namespace BookStore.Process
             CreateMessageQueue();
             InsertDummyEntities();
             HostServices();
+        }
+
+        private static void HostSubscriberService()
+        {
+            mHost = new SubscriberServiceHost(typeof(SubscriberService), cAddress, cMexAddress, true, ".\\private$\\BookStoreQueueTransacted");
+        }
+
+        private static void SubscribeForEvents()
+        {
+            SubscriptionServiceClient lClient = new SubscriptionServiceClient();
+            lClient.Subscribe("TransferComplete", cAddress);
+            lClient.Subscribe("TransferFailed", cAddress);
         }
 
         private static void InsertDummyEntities()

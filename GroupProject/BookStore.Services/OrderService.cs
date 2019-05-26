@@ -8,6 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 using BookStore.Services.MessageTypes;
 
 using System.ServiceModel;
+using BookStore.Services.MessageTypes.Model;
 
 namespace BookStore.Services
 {
@@ -20,6 +21,16 @@ namespace BookStore.Services
             {
                 return ServiceFactory.GetService<IOrderProvider>();
             }
+        }
+
+        public void TransferFundsComplete(TransferComplete pItem)
+        {
+            OrderProvider.TransferFundsComplete(pItem.OrderGuid);
+        }
+
+        public void TransferFundsFailed(TransferFailed pItem)
+        {
+            OrderProvider.TransferFundsFailed(pItem.OrderGuid);
         }
 
         public void SubmitOrder(Order pOrder)
