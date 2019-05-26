@@ -6,6 +6,7 @@ using Bank.Services.Interfaces;
 using Bank.Business.Components.Interfaces;
 using System.ServiceModel;
 using Microsoft.Practices.ServiceLocation;
+using Bank.MessageTypes;
 
 namespace Bank.Services
 {
@@ -16,10 +17,16 @@ namespace Bank.Services
             get { return ServiceLocator.Current.GetInstance<ITransferProvider>(); }
         }
 
-        [OperationBehavior(TransactionScopeRequired=true)]
-        public void Transfer(double pAmount, int pFromAcctNumber, int pToAcctNumber)
+        [OperationBehavior(TransactionScopeRequired = true)]
+        public void Transfer(TransferRequest pTransferRequest)
         {
-            TransferProvider.Transfer(pAmount, pFromAcctNumber, pToAcctNumber);
+            TransferProvider.Transfer(pTransferRequest.Amount, pTransferRequest.FromAcctNumber, pTransferRequest.ToAcctNumber);
         }
+
+        //[OperationBehavior(TransactionScopeRequired=true)]
+        //public void Transfer(double pAmount, int pFromAcctNumber, int pToAcctNumber)
+        //{
+        //    TransferProvider.Transfer(pAmount, pFromAcctNumber, pToAcctNumber);
+        //}
     }
 }

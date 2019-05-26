@@ -44,9 +44,7 @@ namespace BookStore.Process
         {
             SubscriptionServiceClient lClient = new SubscriptionServiceClient();
             lClient.Subscribe("TransferComplete", cAddress);
-            lClient.Subscribe("TransferError", cAddress);
-            lClient.Subscribe("DeliverySubmittedOutcome", cAddress);
-            lClient.Subscribe("DeliveryCompletedOutcome", cAddress);
+            lClient.Subscribe("TransferFailed", cAddress);
         }
 
         private static void InsertDummyEntities()

@@ -74,6 +74,10 @@
     <Compile Include="StockProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bank.Message.MessageTypes\Bank.MessageTypes.csproj">
+      <Project>{1A5B945E-2277-47F6-B8DF-E12BAF63E5E7}</Project>
+      <Name>Bank.MessageTypes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Bank.Services\Bank.Services.Interfaces\Bank.Services.Interfaces.csproj">
       <Project>{3317f30a-a62c-474d-8d2b-b91605ecf202}</Project>
       <Name>Bank.Services.Interfaces</Name>

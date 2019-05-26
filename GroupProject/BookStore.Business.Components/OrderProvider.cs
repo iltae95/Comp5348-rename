@@ -7,6 +7,7 @@ using BookStore.Business.Entities;
 using System.Transactions;
 using Microsoft.Practices.ServiceLocation;
 using DeliveryCo.MessageTypes;
+using Bank.MessageTypes;
 
 namespace BookStore.Business.Components
 {
@@ -52,8 +53,7 @@ namespace BookStore.Business.Components
                         lContainer.Orders.Add(pOrder);
 
                         // ask the Bank service to transfer fundss
-                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0);
-
+                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0, pOrder.Id, pOrder.Customer.Id);
                         // ask the delivery service to organise delivery
                         PlaceDeliveryForOrder(pOrder);
 
@@ -128,11 +128,20 @@ namespace BookStore.Business.Components
             pOrder.Delivery = lDelivery;   
         }
 
-        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal)
+        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal, int pOrderId, int pCustomerId)
         {
             try
             {
-                ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
+                ExternalServiceFactory.Instance.TransferService.Transfer(
+                    new TransferRequest
+                    {
+                        Amount = pTotal,
+                        FromAcctNumber = pCustomerAccountNumber,
+                        ToAcctNumber = RetrieveBookStoreAccountNumber(),
+                        OrderGuid = pOrderId,
+                        CustomerId = pCustomerId
+                    });
+                //ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
             }
             catch
             {
