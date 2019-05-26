@@ -97,6 +97,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+
     <None Include="Connected Services\PublisherService\Common.Model.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -114,6 +115,7 @@
     <None Include="Connected Services\SubscriptionService\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

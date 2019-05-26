@@ -59,7 +59,7 @@ namespace BookStore.Business.Components
                     }
                 }
             }
-            SendOrderPlacedConfirmation(pOrder);
+            //SendOrderPlacedConfirmation(pOrder);
         }
 
         //private void MarkAppropriateUnchangedAssociations(Order pOrder)
@@ -86,35 +86,40 @@ namespace BookStore.Business.Components
 
         private void SendOrderErrorMessage(Order pOrder, Exception pException)
         {
-            EmailProvider.SendMessage(new EmailMessage()
+            EmailServiceRef.EmailServiceClient eClient = new EmailServiceRef.EmailServiceClient();
+            eClient.SendEmail(new EmailService.MessageTypes.EmailMessage()
             {
-                ToAddress = pOrder.Customer.Email,
+                ToAddresses = pOrder.Customer.Email,
                 Message = "There was an error in processsing your order " + pOrder.OrderNumber + ": "+ pException.Message + ". Please contact Book Store"
             });
         }
 
         private void SendOrderPlacedConfirmation(Order pOrder)
         {
-            EmailProvider.SendMessage(new EmailMessage()
+            EmailServiceRef.EmailServiceClient eClient = new EmailServiceRef.EmailServiceClient();
+            eClient.SendEmail(new EmailService.MessageTypes.EmailMessage()
             {
-                ToAddress = pOrder.Customer.Email,
-                Message = "Your order " + pOrder.OrderNumber + " has been placed"
+                ToAddresses = pOrder.Customer.Email,
+                Message = "Your order " + pOrder.OrderNumber + " has been placed#########"
+
             });
         }
 
         private void PlaceDeliveryForOrder(Order pOrder)
         {
+            DeliveryServiceRef.DeliveryServiceClient deliveryServiceClient = new DeliveryServiceRef.DeliveryServiceClient();
             Delivery lDelivery = new Delivery() { DeliveryStatus = DeliveryStatus.Submitted, SourceAddress = "Book Store Address", DestinationAddress = pOrder.Customer.Address, Order = pOrder };
 
-            Guid lDeliveryIdentifier = ExternalServiceFactory.Instance.DeliveryService.SubmitDelivery(new DeliveryInfo()
+            //Guid lDeliveryIdentifier = 
+            deliveryServiceClient.SubmitDelivery(new DeliveryInfo()
             { 
                 OrderNumber = lDelivery.Order.OrderNumber.ToString(),  
                 SourceAddress = lDelivery.SourceAddress,
                 DestinationAddress = lDelivery.DestinationAddress,
-                DeliveryNotificationAddress = "net.tcp://localhost:9010/DeliveryNotificationService"
+                DeliveryNotificationAddress = "net.msmq://localhost/private/EmailNotifyQueue"
             });
 
-            lDelivery.ExternalDeliveryIdentifier = lDeliveryIdentifier;
+            //lDelivery.ExternalDeliveryIdentifier = lDeliveryIdentifier;
             pOrder.Delivery = lDelivery;   
         }
 

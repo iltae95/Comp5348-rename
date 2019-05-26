@@ -11,7 +11,12 @@ namespace DeliveryCo.Services.Interfaces
     [ServiceContract]
     public interface IDeliveryNotificationService
     {
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
+        void NotifyDeliverySubmitted(String orderNnmber, Guid pDeliveryId, DeliveryInfoStatus status);
+
+        //[OperationContract]
+
+        [OperationContract(IsOneWay = true)]
         void NotifyDeliveryCompletion(Guid pDeliveryId, DeliveryInfoStatus status);
     }
 }

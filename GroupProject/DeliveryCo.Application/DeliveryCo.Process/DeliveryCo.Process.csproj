@@ -69,7 +69,11 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+
     <Reference Include="System.Runtime.Serialization" />
+
+    <Reference Include="System.Messaging" />
+
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -95,6 +99,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+
     <None Include="Connected Services\PublisherService\Common.Model.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -115,7 +120,9 @@
     <None Include="Connected Services\SubscriptionService\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+
     <None Include="packages.config" />
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DeliveryCo.Business\DeliveryCo.Business.Components.Interfaces\DeliveryCo.Business.Components.Interfaces.csproj">

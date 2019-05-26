@@ -17,8 +17,12 @@ using System.Transactions;
 using System.ServiceModel.Description;
 using BookStore.Business.Components.Interfaces;
 using BookStore.WebClient.CustomAuth;
+
 using Common;
 using BookStore.Process.SubscriptionService;
+
+using System.Messaging;
+
 
 namespace BookStore.Process
 {
@@ -30,7 +34,9 @@ namespace BookStore.Process
 
         static void Main(string[] args)
         {
+            
             ResolveDependencies();
+            CreateMessageQueue();
             InsertDummyEntities();
             HostSubscriberService();
             SubscribeForEvents();
@@ -218,6 +224,12 @@ namespace BookStore.Process
         private static String GetAssemblyQualifiedServiceName(String pServiceName)
         {
             return String.Format("{0}, {1}", pServiceName, System.Configuration.ConfigurationManager.AppSettings["ServiceAssemblyName"].ToString());
+        }
+        private static void CreateMessageQueue()
+        {
+            
+            if (!MessageQueue.Exists(".\\private$\\EmailNotifyQueue"))
+                MessageQueue.Create(".\\private$\\EmailNotifyQueue", true);
         }
     }
 }
