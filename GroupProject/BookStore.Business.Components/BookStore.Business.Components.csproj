@@ -68,6 +68,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\EmailServiceRef\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="UserProvider.cs" />
     <Compile Include="OrderProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,9 +128,20 @@
     <None Include="Service References\DeliveryServiceRef\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\EmailServiceRef\EmailService.MessageTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EmailServiceRef\service.wsdl" />
+    <None Include="Service References\EmailServiceRef\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EmailServiceRef\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DeliveryServiceRef\" />
+    <WCFMetadataStorage Include="Service References\EmailServiceRef\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DeliveryServiceRef\configuration91.svcinfo" />
@@ -135,6 +151,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DeliveryServiceRef\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

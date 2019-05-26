@@ -96,19 +96,22 @@ namespace BookStore.Business.Components
 
         private void SendOrderErrorMessage(Order pOrder, Exception pException)
         {
-            EmailProvider.SendMessage(new EmailMessage()
+            EmailServiceRef.EmailServiceClient eClient = new EmailServiceRef.EmailServiceClient();
+            eClient.SendEmail(new EmailService.MessageTypes.EmailMessage()
             {
-                ToAddress = pOrder.Customer.Email,
+                ToAddresses = pOrder.Customer.Email,
                 Message = "There was an error in processsing your order " + pOrder.OrderNumber + ": "+ pException.Message + ". Please contact Book Store"
             });
         }
 
         private void SendOrderPlacedConfirmation(Order pOrder)
         {
-            EmailProvider.SendMessage(new EmailMessage()
+            EmailServiceRef.EmailServiceClient eClient = new EmailServiceRef.EmailServiceClient();
+            eClient.SendEmail(new EmailService.MessageTypes.EmailMessage()
             {
-                ToAddress = pOrder.Customer.Email,
-                Message = "Your order " + pOrder.OrderNumber + " has been placed"
+                ToAddresses = pOrder.Customer.Email,
+                Message = "Your order " + pOrder.OrderNumber + " has been placed#########"
+
             });
         }
 
