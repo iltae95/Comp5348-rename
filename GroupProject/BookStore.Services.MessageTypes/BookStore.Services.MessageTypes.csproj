@@ -47,6 +47,8 @@
     <Compile Include="LoginCredential.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="MessageType.cs" />
+    <Compile Include="Model\TransferComplete.cs" />
+    <Compile Include="Model\TransferFailed.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

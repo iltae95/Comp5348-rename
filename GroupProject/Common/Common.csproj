@@ -58,6 +58,9 @@
     <Compile Include="IVisitable.cs" />
     <Compile Include="IVisitor.cs" />
     <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\TransferCompleteMessage.cs" />
+    <Compile Include="Model\TransferFailedMessage.cs" />
+    <Compile Include="Model\TransferRequestMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionUtil.cs" />
     <Compile Include="SubscriberServiceHost.cs" />

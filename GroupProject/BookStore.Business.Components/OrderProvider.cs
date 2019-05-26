@@ -140,6 +140,60 @@ namespace BookStore.Business.Components
             }
         }
 
+        public void TransferFundsComplete(Guid pOrderGuid)
+        {
+            using (TransactionScope lScope = new TransactionScope())
+            {
+                using (BookStoreEntityModelContainer lContainer = new BookStoreEntityModelContainer())
+                {
+                    try
+                    {
+                        Console.WriteLine("Funds Transfer Complete");
+                        var pOrder = lContainer.Orders.Include("Customer").First(x => x.OrderNumber == pOrderGuid);
+
+                        PlaceDeliveryForOrder(pOrder);
+
+                        lContainer.SaveChanges();
+                        lScope.Complete();
+                    }
+                    catch (Exception lException)
+                    {
+                        Console.WriteLine("Error in FundsTransferComplete: " + lException.Message);
+                        throw;
+                    }
+                }
+            }
+
+        }
+
+        public void TransferFundsFailed(Guid pOrderGuid)
+        {
+            using (TransactionScope lScope = new TransactionScope())
+            {
+                using (BookStoreEntityModelContainer lContainer = new BookStoreEntityModelContainer())
+                {
+                    try
+                    {
+                        Console.WriteLine("Funds Transfer Error");
+                        var pOrder = lContainer.Orders
+                            .Include("Customer").FirstOrDefault(x => x.OrderNumber == pOrderGuid);
+
+                        EmailProvider.SendMessage(new EmailMessage()
+                        {
+                            ToAddress = pOrder.Customer.Email,
+                            Message = "There was an error with your credit. The purchase cannot proceed."
+                        });
+                        lContainer.SaveChanges();
+                        lScope.Complete();
+                    }
+                    catch (Exception lException)
+                    {
+                        Console.WriteLine("Error in FundsTransferError: " + lException.Message);
+                        throw;
+                    }
+                }
+            }
+        }
 
         private int RetrieveBookStoreAccountNumber()
         {
