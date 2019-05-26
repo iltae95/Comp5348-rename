@@ -1,9 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Common.Model" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Common.Model" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/System" />
   <xs:complexType name="Message">
     <xs:sequence>
       <xs:element minOccurs="0" name="Topic" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Message" nillable="true" type="tns:Message" />
+  <xs:complexType name="TransferCompleteMessage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Message">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CustomerId" type="xs:int" />
+          <xs:element minOccurs="0" name="OrderId" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TransferCompleteMessage" nillable="true" type="tns:TransferCompleteMessage" />
+  <xs:complexType name="TransferFailedMessage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Message">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System" minOccurs="0" name="Error" nillable="true" type="q1:Exception" />
+          <xs:element minOccurs="0" name="OrderId" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TransferFailedMessage" nillable="true" type="tns:TransferFailedMessage" />
+  <xs:complexType name="TransferRequestMessage">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:Message">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Amount" type="xs:double" />
+          <xs:element minOccurs="0" name="CustomerId" type="xs:int" />
+          <xs:element minOccurs="0" name="FromAccountNumber" type="xs:int" />
+          <xs:element minOccurs="0" name="OrderId" type="xs:int" />
+          <xs:element minOccurs="0" name="ToAccountNumber" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TransferRequestMessage" nillable="true" type="tns:TransferRequestMessage" />
 </xs:schema>

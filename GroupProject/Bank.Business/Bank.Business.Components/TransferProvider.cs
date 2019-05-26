@@ -26,25 +26,22 @@ namespace Bank.Business.Components
             {
                 try
                 {
-                    // find the two account entities and add them to the Container
-                    Account lFromAcct = lContainer.Accounts.Where(account => pTransferRequest.FromAcctNumber == account.AccountNumber).First(); 
-                    Account lToAcct = lContainer.Accounts.Where(account => pTransferRequest.ToAcctNumber == account.AccountNumber).First();
+                    Account fromAcct = lContainer.Accounts.Where(account => pTransferRequest.FromAcctNumber == account.AccountNumber).First(); 
+                    Account toAcct = lContainer.Accounts.Where(account => pTransferRequest.ToAcctNumber == account.AccountNumber).First();
 
-                    // update the two accounts
-                    lFromAcct.Withdraw(pTransferRequest.Amount);
-                    lToAcct.Deposit(pTransferRequest.Amount);
+                    fromAcct.Withdraw(pTransferRequest.Amount);
+                    toAcct.Deposit(pTransferRequest.Amount);
 
-                    var lItem = new TransferComplete
+                    var item = new TransferComplete
                     {
                         OrderId = pTransferRequest.OrderId,
                         CustomerId = pTransferRequest.CustomerId
                     };
                     var lVisitor = new TransferCompleteConverter();
-                    lItem.Accept(lVisitor);
+                    item.Accept(lVisitor);
                     PublisherServiceClient lClient = new PublisherServiceClient();
                     lClient.Publish(lVisitor.Result);
-
-                    // save changed entities and finish the transaction
+                    
                     lContainer.SaveChanges();
                     lScope.Complete();
                 }
@@ -52,16 +49,15 @@ namespace Bank.Business.Components
                 {
                     Console.WriteLine("Error occured while transferring money:  " + lException.Message);
 
-                    var lItem = new TransferFailed
+                    var item = new TransferFailed
                     {
                         OrderId = pTransferRequest.OrderId
                     };
                     var lVisitor = new TransferFailedConverter();
-                    lItem.Accept(lVisitor);
+                    item.Accept(lVisitor);
                     PublisherServiceClient lClient = new PublisherServiceClient();
                     lClient.Publish(lVisitor.Result);
-
-                    throw;
+                    
                 }
             }
         }

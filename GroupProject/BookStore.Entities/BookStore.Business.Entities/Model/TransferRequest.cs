@@ -11,10 +11,10 @@ namespace BookStore.Business.Entities.Model
     {
         public String Topic => "TransferRequest";
         public double Amount { get; set; }
+        public Guid OrderId { get; set; }
+        public int CustomerId { get; set; }
         public int FromAccountNumber { get; set; }
         public int ToAccountNumber { get; set; }
-        public int OrderId { get; set; }
-        public int CustomerId { get; set; }
 
         public void Accept(IVisitor pVisitor)
         {

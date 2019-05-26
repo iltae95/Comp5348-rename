@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="5378e8ed-5a04-4e65-a6a2-0daf7d365f09" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f017518e-a865-4f90-9612-7077a68c7c7d" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -22,9 +22,9 @@
     <MetadataSource Address="net.tcp://localhost:9011/SubscriptionService/mex" Protocol="mex" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="26ed61d2-c72d-45a4-870f-58d404e24c74" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
-    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="84cf7531-3a9f-422f-8c07-f4b62ce5b97d" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
-    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="fdd1b37a-7f1c-473d-9122-08c622bfd44b" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="ecee6b57-7ff9-4bd0-804f-cf37abb19ff4" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="7a8ae774-73b5-42c0-8ebf-c1196e046689" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="a152c29d-48d2-4d9a-906f-228224ddd648" SourceId="1" SourceUrl="net.tcp://localhost:9011/SubscriptionService/mex" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

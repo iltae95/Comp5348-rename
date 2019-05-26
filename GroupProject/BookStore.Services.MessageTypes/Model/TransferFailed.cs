@@ -10,7 +10,7 @@ namespace BookStore.Services.MessageTypes.Model
     public class TransferFailed : IVisitable
     {
         public Exception Error { get; set; }
-        public int OrderId { get; set; }
+        public Guid OrderId { get; set; }
 
         public void Accept(IVisitor pVisitor)
         {

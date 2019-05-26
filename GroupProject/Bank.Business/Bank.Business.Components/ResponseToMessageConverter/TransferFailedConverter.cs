@@ -16,12 +16,12 @@ namespace Bank.Business.Components.ResponseToMessageConverter
         {
             if (pVisitable is TransferFailed)
             {
-                var lItem = pVisitable as TransferFailed;
+                var res = pVisitable as TransferFailed;
                 Result = new TransferFailedMessage
                 {
-                    Error = lItem.Error,
-                    OrderId = lItem.OrderId,
-                    Topic = lItem.Topic
+                    Error = res.Error,
+                    OrderId = res.OrderId,
+                    Topic = res.Topic
                 };
             }
         }

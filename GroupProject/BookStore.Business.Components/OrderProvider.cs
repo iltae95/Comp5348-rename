@@ -29,8 +29,6 @@ namespace BookStore.Business.Components
         {      
             using (TransactionScope lScope = new TransactionScope())
             {
-                //LoadBookStocks(pOrder);
-                //MarkAppropriateUnchangedAssociations(pOrder);
 
                 using (BookStoreEntityModelContainer lContainer = new BookStoreEntityModelContainer())
                 {
@@ -38,9 +36,6 @@ namespace BookStore.Business.Components
                     {
                         pOrder.OrderNumber = Guid.NewGuid();
                         pOrder.Store = "OnLine";
-
-                        // Book objects in pOrder are missing the link to their Stock tuple (and the Stock GUID field)
-                        // so fix up the 'books' in the order with well-formed 'books' with 1:1 links to Stock tuples
                         foreach (OrderItem lOrderItem in pOrder.OrderItems)
                         {
                             int bookId = lOrderItem.Book.Id;
@@ -48,18 +43,11 @@ namespace BookStore.Business.Components
                             System.Guid stockId = lOrderItem.Book.Stock.Id;
                             lOrderItem.Book.Stock = lContainer.Stocks.Where(stock => stockId == stock.Id).First();
                         }
-                        // and update the stock levels
                         pOrder.UpdateStockLevels();
-
-                        // add the modified Order tree to the Container (in Changed state)
                         lContainer.Orders.Add(pOrder);
-
-                        // ask the Bank service to transfer fundss
-                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0, pOrder.Id, pOrder.Customer.Id);
-                        // ask the delivery service to organise delivery
+                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0, pOrder.OrderNumber, pOrder.Customer.Id);
+                        
                         PlaceDeliveryForOrder(pOrder);
-
-                        // and save the order
                         lContainer.SaveChanges();
                         lScope.Complete();                    
                     }
@@ -130,11 +118,11 @@ namespace BookStore.Business.Components
             pOrder.Delivery = lDelivery;   
         }
 
-        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal, int pOrderId, int pCustomerId)
+        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal, Guid pOrderId, int pCustomerId)
         {
             try
             {
-                TransferRequest lItem = new TransferRequest
+                TransferRequest req = new TransferRequest
                 {
                     Amount = pTotal,
                     FromAccountNumber = pCustomerAccountNumber,
@@ -143,7 +131,7 @@ namespace BookStore.Business.Components
                     CustomerId = pCustomerId
                 };
                 TransferRequestConverter lVisitor = new TransferRequestConverter();
-                lVisitor.Visit(lItem);
+                lVisitor.Visit(req);
                 PublisherServiceClient lClient = new PublisherServiceClient();
                 lClient.Publish(lVisitor.Result);
                 //ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
@@ -154,7 +142,7 @@ namespace BookStore.Business.Components
             }
         }
 
-        public void TransferFundsComplete(int pOrderId)
+        public void TransferFundsComplete(Guid pOrderId)
         {
             using (TransactionScope lScope = new TransactionScope())
             {
@@ -163,7 +151,7 @@ namespace BookStore.Business.Components
                     try
                     {
                         Console.WriteLine("Funds Transfer Complete");
-                        var pOrder = lContainer.Orders.Include("Customer").First(x => x.Id == pOrderId);
+                        var pOrder = lContainer.Orders.Include("Customer").First(x => x.OrderNumber == pOrderId);
 
                         PlaceDeliveryForOrder(pOrder);
 
@@ -180,7 +168,7 @@ namespace BookStore.Business.Components
 
         }
 
-        public void TransferFundsFailed(int pOrderId)
+        public void TransferFundsFailed(Guid pOrderId)
         {
             using (TransactionScope lScope = new TransactionScope())
             {
@@ -188,9 +176,9 @@ namespace BookStore.Business.Components
                 {
                     try
                     {
-                        Console.WriteLine("Funds Transfer Error");
+                        Console.WriteLine("Funds Transfer Failed");
                         var pOrder = lContainer.Orders
-                            .Include("Customer").FirstOrDefault(x => x.Id == pOrderId);
+                            .Include("Customer").FirstOrDefault(x => x.OrderNumber == pOrderId);
 
                         EmailProvider.SendMessage(new EmailMessage()
                         {
@@ -202,7 +190,7 @@ namespace BookStore.Business.Components
                     }
                     catch (Exception lException)
                     {
-                        Console.WriteLine("Error in FundsTransferError: " + lException.Message);
+                        Console.WriteLine("Error in TransferFundsFailed: " + lException.Message);
                         throw;
                     }
                 }

@@ -16,12 +16,12 @@ namespace Bank.Business.Components.ResponseToMessageConverter
         {
             if (pVisitable is TransferComplete)
             {
-                var lItem = pVisitable as TransferComplete;
+                var res = pVisitable as TransferComplete;
                 Result = new TransferCompleteMessage
                 {
-                    CustomerId = lItem.CustomerId,
-                    OrderId = lItem.OrderId,
-                    Topic = lItem.Topic
+                    CustomerId = res.CustomerId,
+                    OrderId = res.OrderId,
+                    Topic = res.Topic
                 };
             }
         }
