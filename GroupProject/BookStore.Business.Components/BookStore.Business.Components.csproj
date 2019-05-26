@@ -35,10 +35,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\External\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -64,6 +64,13 @@
     <Compile Include="ExternalServiceFactory.cs" />
     <Compile Include="RoleProvider.cs" />
     <Compile Include="Service References\PublisherService\Reference.cs">
+    <Compile Include="Service References\DeliveryServiceRef\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\EmailServiceRef\Reference.cs">
+
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -117,6 +124,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+
     <None Include="Service References\PublisherService\Common.Model.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -139,6 +147,53 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\PublisherService\Reference.svcmap">
+
+    <None Include="Service References\DeliveryServiceRef\DeliveryCo.MessageTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DeliveryServiceRef\service.wsdl" />
+    <None Include="Service References\DeliveryServiceRef\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\DeliveryServiceRef\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EmailServiceRef\EmailService.MessageTypes.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EmailServiceRef\service.wsdl" />
+    <None Include="Service References\EmailServiceRef\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EmailServiceRef\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DeliveryServiceRef\" />
+    <WCFMetadataStorage Include="Service References\EmailServiceRef\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DeliveryServiceRef\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DeliveryServiceRef\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\DeliveryServiceRef\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EmailServiceRef\Reference.svcmap">
+
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
