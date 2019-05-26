@@ -9,7 +9,7 @@ namespace BookStore.Services.MessageTypes.Model
 {
     public class TransferComplete : IVisitable
     {
-        public Guid OrderGuid { get; set; }
+        public Guid OrderId { get; set; }
 
         public void Accept(IVisitor pVisitor)
         {

@@ -11,17 +11,40 @@ using Microsoft.Practices.Unity.Configuration;
 using Microsoft.Practices.Unity.ServiceLocatorAdapter;
 using Microsoft.Practices.ServiceLocation;
 using System.Configuration;
+using Common;
+using Bank.Process.SubscriptionService;
+using System.Messaging;
 
 namespace Bank.Process
 {
     class Program
     {
+        private static SubscriberServiceHost mHost;
+        private const String cAddress = "net.msmq://localhost/private/BankQueueTransacted";
+        private const String cMexAddress = "net.tcp://localhost:9022/BankQueueTransacted/mex";
+
         static void Main(string[] args)
         {
             ResolveDependencies();
             CreateDummyEntities();
-            HostServices();
 
+            if (!MessageQueue.Exists(".\\private$\\TransferService"))
+                MessageQueue.Create(".\\private$\\TransferService", true);
+
+            HostSubscriberService();
+            SubscribeForEvents();
+            HostServices();
+        }
+
+        private static void HostSubscriberService()
+        {
+            mHost = new SubscriberServiceHost(typeof(SubscriberService), cAddress, cMexAddress, true, ".\\private$\\BankQueueTransacted");
+        }
+
+        private static void SubscribeForEvents()
+        {
+            SubscriptionServiceClient lClient = new SubscriptionServiceClient();
+            lClient.Subscribe("TransferRequest", cAddress);
         }
 
         private static void HostServices()
@@ -56,35 +79,7 @@ namespace Bank.Process
                     lScope.Complete();
                 }
             }
-
-            // testing Transfer code
-            //using (TransactionScope lScope = new TransactionScope())
-            //using (BankEntityModelContainer lContainer = new BankEntityModelContainer())
-            //{
-            //    try
-            //    {
-            //        int pFromAcctNumber = 456;
-            //        int pToAcctNumber = 123;
-            //        int pAmount = 50;
-
-            //        // find the two account entities and add them to the Container
-            //        Account lFromAcct = lContainer.Accounts.Where(account => pFromAcctNumber == account.AccountNumber).First();
-            //        Account lToAcct = lContainer.Accounts.Where(account => pToAcctNumber == account.AccountNumber).First();
-
-            //        // update the two accounts
-            //        lFromAcct.Withdraw(pAmount);
-            //        lToAcct.Deposit(pAmount);
-
-            //        // save changed entities and finish the transaction
-            //        lContainer.SaveChanges();
-            //        lScope.Complete();
-            //    }
-            //    catch (Exception lException)
-            //    {
-            //        Console.WriteLine("Error occured while transferring money:  " + lException.Message);
-            //        throw;
-            //    }
-            //}
+            
         }
 
         private static void ResolveDependencies()

@@ -14,6 +14,6 @@ namespace Common.Model
         public Exception Error { get; set; }
 
         [DataMember]
-        public Guid OrderGuid { get; set; }
+        public Guid OrderId { get; set; }
     }
 }

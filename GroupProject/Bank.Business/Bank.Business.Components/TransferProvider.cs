@@ -8,6 +8,10 @@ using System.Transactions;
 using System.Data;
 using System.Data.Entity.Infrastructure;
 using Bank.Services.Interfaces;
+using Bank.MessageTypes;
+using Bank.Business.Components.Model;
+using Bank.Business.Components.PublisherService;
+using Bank.Business.Components.ResponseToMessageConverter;
 
 namespace Bank.Business.Components
 {
@@ -15,29 +19,45 @@ namespace Bank.Business.Components
     {
 
 
-        public void Transfer(double pAmount, int pFromAcctNumber, int pToAcctNumber)
+        public void Transfer(TransferRequest pTransferRequest)
         {
             using (TransactionScope lScope = new TransactionScope())
             using (BankEntityModelContainer lContainer = new BankEntityModelContainer())
             {
                 try
                 {
-                    // find the two account entities and add them to the Container
-                    Account lFromAcct = lContainer.Accounts.Where(account => pFromAcctNumber == account.AccountNumber).First(); 
-                    Account lToAcct = lContainer.Accounts.Where(account => pToAcctNumber == account.AccountNumber).First();
+                    Account fromAcct = lContainer.Accounts.Where(account => pTransferRequest.FromAcctNumber == account.AccountNumber).First(); 
+                    Account toAcct = lContainer.Accounts.Where(account => pTransferRequest.ToAcctNumber == account.AccountNumber).First();
 
-                    // update the two accounts
-                    lFromAcct.Withdraw(pAmount);
-                    lToAcct.Deposit(pAmount);
+                    fromAcct.Withdraw(pTransferRequest.Amount);
+                    toAcct.Deposit(pTransferRequest.Amount);
 
-                    // save changed entities and finish the transaction
+                    var item = new TransferComplete
+                    {
+                        OrderId = pTransferRequest.OrderId,
+                        CustomerId = pTransferRequest.CustomerId
+                    };
+                    var lVisitor = new TransferCompleteConverter();
+                    item.Accept(lVisitor);
+                    PublisherServiceClient lClient = new PublisherServiceClient();
+                    lClient.Publish(lVisitor.Result);
+                    
                     lContainer.SaveChanges();
                     lScope.Complete();
                 }
                 catch (Exception lException)
                 {
                     Console.WriteLine("Error occured while transferring money:  " + lException.Message);
-                    throw;
+
+                    var item = new TransferFailed
+                    {
+                        OrderId = pTransferRequest.OrderId
+                    };
+                    var lVisitor = new TransferFailedConverter();
+                    item.Accept(lVisitor);
+                    PublisherServiceClient lClient = new PublisherServiceClient();
+                    lClient.Publish(lVisitor.Result);
+                    
                 }
             }
         }

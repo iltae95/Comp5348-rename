@@ -9,7 +9,7 @@ namespace BookStore.Business.Components.Interfaces
     public interface IOrderProvider
     {
         void SubmitOrder(Order pOrder);
-        void TransferFundsFailed(Guid pOrderGuid);
-        void TransferFundsComplete(Guid pOrderGuid);
+        void TransferFundsFailed(Guid pOrderId);
+        void TransferFundsComplete(Guid pOrderId);
     }
 }

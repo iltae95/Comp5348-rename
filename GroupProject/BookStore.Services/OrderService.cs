@@ -25,12 +25,12 @@ namespace BookStore.Services
 
         public void TransferFundsComplete(TransferComplete pItem)
         {
-            OrderProvider.TransferFundsComplete(pItem.OrderGuid);
+            OrderProvider.TransferFundsComplete(pItem.OrderId);
         }
 
         public void TransferFundsFailed(TransferFailed pItem)
         {
-            OrderProvider.TransferFundsFailed(pItem.OrderGuid);
+            OrderProvider.TransferFundsFailed(pItem.OrderId);
         }
 
         public void SubmitOrder(Order pOrder)

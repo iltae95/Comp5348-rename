@@ -22,7 +22,7 @@ namespace Bank.Services.MessageToRequestConverter
                     Amount = message.Amount,
                     CustomerId = message.CustomerId,
                     FromAcctNumber = message.FromAccountNumber,
-                    OrderGuid = message.OrderId,
+                    OrderId = message.OrderId,
                     ToAcctNumber = message.ToAccountNumber
                 };
             }
