@@ -21,5 +21,14 @@ namespace BookStore.Business.Entities
                 }
             }
         }
+
+
+        public void UndoUpdateStockLevels()
+        {
+            foreach (OrderItem lItem in this.OrderItems)
+            {
+                lItem.Book.Stock.Quantity += lItem.Quantity;
+            }
+        }
     }
 }

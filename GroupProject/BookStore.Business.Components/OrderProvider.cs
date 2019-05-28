@@ -7,6 +7,9 @@ using BookStore.Business.Entities;
 using System.Transactions;
 using Microsoft.Practices.ServiceLocation;
 using DeliveryCo.MessageTypes;
+using BookStore.Business.Entities.Model;
+using BookStore.Business.Components.RequestToMessageConverter;
+using BookStore.Business.Components.PublisherService;
 
 namespace BookStore.Business.Components
 {
@@ -37,7 +40,7 @@ namespace BookStore.Business.Components
                         pOrder.Store = "OnLine";
 
                         // Book objects in pOrder are missing the link to their Stock tuple (and the Stock GUID field)
-                        // so fix up the 'books' in the order with well-formed 'books' with 1:1 links to Stock tuples
+                        //// so fix up the 'books' in the order with well-formed 'books' with 1:1 links to Stock tuples
                         foreach (OrderItem lOrderItem in pOrder.OrderItems)
                         {
                             int bookId = lOrderItem.Book.Id;
@@ -52,10 +55,8 @@ namespace BookStore.Business.Components
                         lContainer.Orders.Add(pOrder);
 
                         // ask the Bank service to transfer fundss
-                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0);
-
-                        // ask the delivery service to organise delivery
-                        PlaceDeliveryForOrder(pOrder);
+                        TransferFundsFromCustomer(UserProvider.ReadUserById(pOrder.Customer.Id).BankAccountNumber, pOrder.Total ?? 0.0, pOrder.OrderNumber, pOrder.Customer.Id);
+                        
 
                         // and save the order
                         lContainer.SaveChanges();
@@ -133,11 +134,23 @@ namespace BookStore.Business.Components
             pOrder.Delivery = lDelivery;   
         }
 
-        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal)
+        private void TransferFundsFromCustomer(int pCustomerAccountNumber, double pTotal, Guid pOrderId, int pCustomerId)
         {
             try
             {
-                ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
+                TransferRequest req = new TransferRequest
+                {
+                    Amount = pTotal,
+                    FromAccountNumber = pCustomerAccountNumber,
+                    ToAccountNumber = RetrieveBookStoreAccountNumber(),
+                    OrderId = pOrderId,
+                    CustomerId = pCustomerId
+                };
+                TransferRequestConverter lVisitor = new TransferRequestConverter();
+                lVisitor.Visit(req);
+                PublisherServiceClient lClient = new PublisherServiceClient();
+                lClient.Publish(lVisitor.Result);
+                //ExternalServiceFactory.Instance.TransferService.Transfer(pTotal, pCustomerAccountNumber, RetrieveBookStoreAccountNumber());
             }
             catch
             {
@@ -149,6 +162,59 @@ namespace BookStore.Business.Components
         private int RetrieveBookStoreAccountNumber()
         {
             return 123;
+        }
+        public void TransferFundsComplete(Guid pOrderId)
+        {
+            using (TransactionScope lScope = new TransactionScope())
+            using (BookStoreEntityModelContainer lContainer = new BookStoreEntityModelContainer())
+            {
+                try
+                {
+                    Console.WriteLine("Funds Transfer Complete");
+                    var pOrder = lContainer.Orders.Include("Customer").First(x => x.OrderNumber == pOrderId);
+
+                    PlaceDeliveryForOrder(pOrder);
+
+                    lContainer.SaveChanges();
+                    lScope.Complete();
+                }
+                catch (Exception lException)
+                {
+                    Console.WriteLine("Error in FundsTransferComplete: " + lException.Message);
+                    throw;
+                }
+            }
+        }
+
+        public void TransferFundsFailed(Guid pOrderId, Exception pException)
+        {
+            using (TransactionScope lScope = new TransactionScope())
+            using (BookStoreEntityModelContainer lContainer = new BookStoreEntityModelContainer())
+            {
+                try
+                {
+                    Console.WriteLine("Funds Transfer Failed");
+                    var pOrder = lContainer.Orders
+                        .Include("Customer").FirstOrDefault(x => x.OrderNumber == pOrderId);
+                    foreach (OrderItem lOrderItem in pOrder.OrderItems)
+                    {
+                        int bookId = lOrderItem.Book.Id;
+                        lOrderItem.Book = lContainer.Books.Where(book => bookId == book.Id).First();
+                        System.Guid stockId = lOrderItem.Book.Stock.Id;
+                        lOrderItem.Book.Stock = lContainer.Stocks.Where(stock => stockId == stock.Id).First();
+                    }
+                    pOrder.UndoUpdateStockLevels();
+
+                    SendOrderErrorMessage(pOrder, pException);
+                    lContainer.SaveChanges();
+                    lScope.Complete();
+                }
+                catch (Exception lException)
+                {
+                    Console.WriteLine("Error in TransferFundsFailed: " + lException.Message);
+                    throw;
+                }
+            }
         }
 
 

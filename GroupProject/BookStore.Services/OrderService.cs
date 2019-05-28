@@ -8,6 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 using BookStore.Services.MessageTypes;
 
 using System.ServiceModel;
+using BookStore.Services.MessageTypes.Model;
 
 namespace BookStore.Services
 {
@@ -37,6 +38,17 @@ namespace BookStore.Services
                 throw new FaultException<InsufficientStockFault>(
                     new InsufficientStockFault() { ItemName = ise.ItemName });
             }
+        }
+
+
+        public void TransferFundsComplete(TransferComplete pItem)
+        {
+            OrderProvider.TransferFundsComplete(pItem.OrderId);
+        }
+
+        public void TransferFundsFailed(TransferFailed pItem)
+        {
+            OrderProvider.TransferFundsFailed(pItem.OrderId, pItem.Error);
         }
     }
 }

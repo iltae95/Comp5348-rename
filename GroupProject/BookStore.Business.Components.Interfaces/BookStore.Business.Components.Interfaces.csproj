@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\BookStore.Entities\BookStore.Business.Entities\BookStore.Business.Entities.csproj">
       <Project>{35992EC3-2C32-46AF-AEE4-491C54F681A5}</Project>
       <Name>BookStore.Business.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BookStore.Services.MessageTypes\BookStore.Services.MessageTypes.csproj">
+      <Project>{27445E9D-2F52-473A-96AF-85FAC10BCCE0}</Project>
+      <Name>BookStore.Services.MessageTypes</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

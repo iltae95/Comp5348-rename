@@ -52,6 +52,10 @@
       <Project>{4BB64DAE-6F81-4E3D-A2BD-41075F28F15F}</Project>
       <Name>Bank.Business.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Bank.Message.MessageTypes\Bank.MessageTypes.csproj">
+      <Project>{1a5b945e-2277-47f6-b8df-e12baf63e5e7}</Project>
+      <Name>Bank.MessageTypes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -62,6 +62,7 @@
     <Compile Include="DeliveryNotificationProvider.cs" />
     <Compile Include="EmailProvider.cs" />
     <Compile Include="ExternalServiceFactory.cs" />
+    <Compile Include="RequestToMessageConverter\TransferConverter.cs" />
     <Compile Include="RoleProvider.cs" />
     <Compile Include="Service References\DeliveryServiceRef\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -69,6 +70,11 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Service References\EmailServiceRef\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\PublisherService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -138,10 +144,21 @@
     <None Include="Service References\EmailServiceRef\service1.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\PublisherService\Common.Model.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\PublisherService\service.wsdl" />
+    <None Include="Service References\PublisherService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\PublisherService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\DeliveryServiceRef\" />
     <WCFMetadataStorage Include="Service References\EmailServiceRef\" />
+    <WCFMetadataStorage Include="Service References\PublisherService\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\DeliveryServiceRef\configuration91.svcinfo" />
@@ -163,6 +180,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\EmailServiceRef\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\PublisherService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\PublisherService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\PublisherService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
